@@ -1,13 +1,19 @@
+#include "GamaSaveinfo.h"
 #include "utility.h"
 #include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 
 #define MAX_NAME 200
 #define MAX_PASSCODE_LENGTH 30
 int main() {
+  srand(time(NULL));
+  int Account_Number = rand();
   char User_Name[MAX_NAME];
+  char User_Name_Checker[MAX_NAME];
+
   char User_Passcode[MAX_PASSCODE_LENGTH];
 
   printf("Welcome to Gamasave, we offer quality service so we are happy to "
@@ -15,9 +21,14 @@ int main() {
 
   printf("User name: ");
   fgets(User_Name, sizeof(User_Name), stdin);
-  clear_buffer(); // used this function here so that User_name will not take more character than it is expected therby causing overflow in the system. In short in other to prevent overflow it have to be used.
+  remove_newline(User_Name);
+  clear_buffer(); // used this function here so that User_name will not take
+  //  more character than it is expected ther by causing overflow
+  //  in the system. In short in other to prevent overflow it
+  //  have to be used.
   printf("printing the lenght of User_Name: %lu\n", strlen(User_Name));
-  if (strlen(User_Name) > 190) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) >
+      190) { // makes sure the user_name does not exceed 190 characters
     while (1) {
       printf("Name must not exceed 190\n");
       printf("What is your Name: ");
@@ -32,6 +43,7 @@ int main() {
 
   printf("What is your passcode: ");
   fgets(User_Passcode, sizeof(User_Passcode), stdin);
+  remove_newline(User_Passcode);
   clear_buffer();
   printf("printing the lenght of User_Name: %lu\n", strlen(User_Passcode));
 
@@ -48,19 +60,28 @@ int main() {
     }
   }
 
+  printf("how\n");
   FILE *User_Check;
   User_Check = fopen("User_Existence.txt", "r");
   if (User_Check == NULL) {
     fprintf(stderr, "Error opening file: %s\n", strerror(errno));
-    // I needed to use stdeer because it is an error stream and i used the strerror so that we get human readable output will be gotten.
+    // I needed to use stdeer because it is an error stream and i used the
+    // strerror so that we get human readable output will be gotten.
+    return 1;
   }
-  while(fgets(User_Name_Checker, sizeof(User_Name_Checker), User_Check)){
-    remove_newline(User_Name_Checker);
-    if(strcmp(User_Name_Checker, User_Name) == 0){
-      printf("Welcome back what do you like to do? \n);
-      
 
-  free(User_Check);
+  while (fgets(User_Name_Checker, sizeof(User_Name_Checker), User_Check) !=
+         NULL) {
+    remove_newline(User_Name_Checker);
+
+    if ((strcmp(User_Name_Checker, User_Name)) == 0) {
+      printf("user efef  name is %s\n", User_Name_Checker);
+      printf("Welcome back what do you like to do? \n");
+      Master_Folder(User_Name);
+      fclose(User_Check);
+      return 0;
+    }
+  }
 
   return 0;
 }
