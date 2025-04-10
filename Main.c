@@ -2,57 +2,57 @@
 #include "utility.h"
 #include <errno.h>
 #include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
 
+#define PATH_MAX 30
 #define MAX_NAME 200
 #define MAX_PASSCODE_LENGTH 30
 int main() {
-  srand(time(NULL));
-  int Account_Number = rand();
+  int Existence_Indicator;
   char User_Name[MAX_NAME];
   char User_Name_Checker[MAX_NAME];
 
   char User_Passcode[MAX_PASSCODE_LENGTH];
 
-  printf("Welcome to Gamasave, we offer quality service so we are happy to "
-         "have you back\n");
+  printf(".........Welcome to Gamasave, a bank for you and not against you........\n");
 
-  printf("User name");
+  printf("Enter your username\n");
   printf("-> ");
   fgets(User_Name, sizeof(User_Name), stdin);
   clear_buffer(); // This clears the remianing input that overflows.
   remove_newline(User_Name); // This removes the newline left in the stream.
-  if (strlen(User_Name) >
-      190) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) > 190) { // makes sure the user_name does not exceed 190 characters
     while (1) {
-      printf("Name must not exceed 190\n");
-      printf("What is your Name: ");
+      printf("\nName must not exceed 190\n");
+      printf("Reenter your name\n");
+      printf("-> ");
       fgets(User_Name, sizeof(User_Name), stdin);
       clear_buffer();
-      printf("Indicator: %s\n", User_Name);
       if (strlen(User_Name) < 190) {
         break;
       }
     }
   }
 
-  printf("What is your passcode: ");
+  printf("\n\nWhat is your passcode\n");
+  printf("-> ");
   fgets(User_Passcode, sizeof(User_Passcode), stdin);
-  remove_newline(User_Passcode);
   clear_buffer();
-  printf("printing the lenght of User_Name: %lu\n", strlen(User_Passcode));
-
+  remove_newline(User_Passcode);
   if (strlen(User_Passcode) > 20) {
     while (1) {
-      printf("Passcode must not exceed 20\n");
-      printf("What is your passcode: ");
+      printf("\nPasscode must not exceed 20\n");
+      printf("Renter your passcode");
+      printf("-> ");
       fgets(User_Passcode, sizeof(User_Passcode), stdin);
       clear_buffer();
-      printf("Indicator: %s\n", User_Passcode);
       if (strlen(User_Passcode) < 20) {
-        break;
+        break;  // runs only when the passcode is less than 20 character
       }
     }
   }
@@ -81,11 +81,25 @@ int main() {
     if ((strcmp(User_Name_Checker, User_Name)) == 0) {
       printf("user efef  name is %s\n", User_Name_Checker);
       printf("Welcome back what do you like to do? \n");
+      printf("Reconnecting to the database....\n");
+      sleep(1);
+      printf("Initializing hand shake>>\n");
+      sleep(2);
+      printf("Welcome back %s\n", User_Name);
       Master_Folder(User_Name);
       fclose(User_Check);
       return 0;
     }
+    else{Existence_Indicator = 1;}
   }
 
-  return 0;
+    if (Existence_Indicator == 1){
+      char Directory_Path[PATH_MAX];
+      snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
+      printf("Thanks for coming to pathner with us we have one of the best services\n");
+      if(mkdir(Directory_Path, 0755) == 0){}
+      else{perror("mkdir error");}
+    }
+  
+    
 }
