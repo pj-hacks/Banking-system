@@ -13,10 +13,10 @@
 #define MAX_NAME 200
 #define MAX_PASSCODE_LENGTH 30
 int main() {
+  
   int Existence_Indicator;
   char User_Name[MAX_NAME];
   char User_Name_Checker[MAX_NAME];
-
   char User_Passcode[MAX_PASSCODE_LENGTH];
 
   printf(".........Welcome to Gamasave, a bank for you and not against you........\n");
@@ -90,16 +90,24 @@ int main() {
       fclose(User_Check);
       return 0;
     }
-    else{Existence_Indicator = 1;}
-  }
-
-    if (Existence_Indicator == 1){
+    else{
+      Existence_Indicator = 1;
+      FILE *User_Creation;
+      User_Creation = fopen("User_Existence.txt", "a+");
+      if(User_Creation == NULL){
+	fprintf(stderr, "Error opening file: %s\n", strerror(errno));
+	return 1;
+      }
       char Directory_Path[PATH_MAX];
       snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
       printf("Thanks for coming to pathner with us we have one of the best services\n");
       if(mkdir(Directory_Path, 0755) == 0){}
-      else{perror("mkdir error");}
+      else{
+	perror("mkdir error");
+	return 1;
+      } 
+      fclose(User_Check);
     }
-  
-    
+  }
+
 }
