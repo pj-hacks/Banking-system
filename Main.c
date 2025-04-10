@@ -91,21 +91,30 @@ int main() {
       return 0;
     }
     else{
-      Existence_Indicator = 1;
+      // Creation of files
       FILE *User_Creation;
       User_Creation = fopen("User_Existence.txt", "a+");
       if(User_Creation == NULL){
 	fprintf(stderr, "Error opening file: %s\n", strerror(errno));
+	fclose(User_Check);
 	return 1;
       }
+
+      // Create directory for the user
       char Directory_Path[PATH_MAX];
       snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
       printf("Thanks for coming to pathner with us we have one of the best services\n");
       if(mkdir(Directory_Path, 0755) == 0){}
       else{
 	perror("mkdir error");
+	fclose(User_Creation);
+	fclose(User_Check);
 	return 1;
-      } 
+      }
+      if(fprintf(User_Creation, "%s\n", User_Name) == 1){
+	Master_Folder(User_Name);
+      }
+      fclose(User_Creation);
       fclose(User_Check);
     }
   }
