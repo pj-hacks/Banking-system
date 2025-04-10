@@ -19,14 +19,11 @@ int main() {
   printf("Welcome to Gamasave, we offer quality service so we are happy to "
          "have you back\n");
 
-  printf("User name: ");
+  printf("User name");
+  printf("-> ");
   fgets(User_Name, sizeof(User_Name), stdin);
-  remove_newline(User_Name);
-  clear_buffer(); // used this function here so that User_name will not take
-  //  more character than it is expected ther by causing overflow
-  //  in the system. In short in other to prevent overflow it
-  //  have to be used.
-  printf("printing the lenght of User_Name: %lu\n", strlen(User_Name));
+  clear_buffer(); // This clears the remianing input that overflows.
+  remove_newline(User_Name); // This removes the newline left in the stream.
   if (strlen(User_Name) >
       190) { // makes sure the user_name does not exceed 190 characters
     while (1) {
@@ -60,7 +57,14 @@ int main() {
     }
   }
 
-  printf("how\n");
+
+  /* This part check if the user exists, if the user does
+     not exist a folder will be created for the person
+     in the Master_folder folder, so when ever and what
+     you are doing bear it in mind that that folder is
+     very essectial for this project.
+  */
+  
   FILE *User_Check;
   User_Check = fopen("User_Existence.txt", "r");
   if (User_Check == NULL) {
