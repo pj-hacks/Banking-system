@@ -9,10 +9,19 @@
 #include <string.h>
 #include <time.h>
 
-#define PATH_MAX 30
+#define PATH_MAX 200
 #define MAX_NAME 30
 #define MAX_PASSCODE_LENGTH 15
-int main() {
+int main(){
+
+  // srand will constantly generate constant number
+  /*This constant number will be feed to the if statement
+    that handles the user creation process. and will be
+    stored in the user file
+  */
+  
+  srand(time(NULL));
+  int Account_Number =rand();
   
   int Existence_Indicator;
   char User_Name[MAX_NAME];
@@ -97,8 +106,7 @@ int main() {
       Existence_Indicator = 1;
       }
   }
-    printf("\n\n%s\n\n", User_Name);
-    
+
     if(Existence_Indicator == 1){
       // Creation of files
       FILE *User_Creation;
@@ -121,9 +129,25 @@ int main() {
       }
        // write user name to user_existence.txt
       if(fprintf(User_Creation, "%s\n", User_Name)){
-      Master_Folder(User_Name);
+	printf("Your account number have been generated\n");
+	printf("Account Number = %d\n", Account_Number);
+	Master_Folder(User_Name);
        }
       fclose(User_Check);
+      fclose(User_Creation);
+
+      // Reusing the User_Creation pointer so that i can open and write to the user fiel
+      char File_Path[PATH_MAX];
+      snprintf(File_Path, sizeof(File_Path), "./Master_Folder/User/%s/Account_setting.txt",User_Name);
+      User_Creation = fopen(File_Path, "w+");
+      if(User_Creation == NULL){
+	fprintf(stderr, "Error occured: %s\n", strerror(errno));
+	return 1;
+      }
+      else{
+	fprintf(User_Creation, "%d\n", Account_Number);
+	fclose(User_Creation);
+      }
     }
   
 

@@ -16,11 +16,7 @@ int Master_Folder(char *User_Name) {
     read from the file then saves it into the
     last_number.
   */
-  char cwd[PATH_MAX];             // stores the absolute path from getcwd
   char File_Path[PATH_MAX + 100]; // stores the full path
-  const char *Decision[6] = {"Deposit",        "Withdraw",
-                             "Transfer",       "ChangeTransferCode",
-                             "ChangePassword", "BuyDataAndAirtime"};
   /*Decision array was created so that
     i will not have to reteat
     "snprintf(File_Path, sizeof(File_Path), "%s/%s.txt", cwd, User_Name);"
@@ -31,7 +27,7 @@ int Master_Folder(char *User_Name) {
   printf("2: Transfer Money\n");
   printf("3: Change passord\n");
   printf("4: Change Passcode\n");
-  printf("5: But data or Airtime");
+  printf("5: But data or Airtime\n");
 
   printf("What would you like to do:\n");
   printf("-> ");
