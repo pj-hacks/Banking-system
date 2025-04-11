@@ -118,8 +118,8 @@ int main(){
       // Create directory for the user
       char Directory_Path[PATH_MAX];
       snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
-       printf("Thanks for coming to pathner with us we have one of the best services\n");
-       if(mkdir(Directory_Path, 0755) == 0){}
+      printf("Thanks for coming to pathner with us we have one of the best services\n");
+      if(mkdir(Directory_Path, 0755) == 0){}
       else{
 	perror("mkdir error");
 	fclose(User_Creation);
@@ -149,6 +149,22 @@ int main(){
 	fclose(User_Creation);
       }
     }
-  
+
+    // Keeps record of all the activities done in the system
+    FILE *Record_Keeping;
+    Record_Keeping = fopen("General_Record.txt", "w+");
+    if(Record_Keeping == NULL){
+      fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
+      return 1;
+    }
+    fclose(Record_Keeping);
+    Record_Keeping = fopen("General_Record.txt", "a+");
+    if(Record_Keeping == NULL){
+      fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
+      return 1;
+    }
+    if(fprintf(Record_Keeping, "%s %d", User_Name, Account_Number)){
+      fclose(Record_Keeping);
+    }
 
 }

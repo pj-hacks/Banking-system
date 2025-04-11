@@ -9,8 +9,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+int Money;
+
 int Master_Folder(char *User_Name) {
-  int Last_Number, Number, Money, Action_Sellection;
+  int Last_Number, Number, Action_Sellection;
   /*Last number holds the last amount read
     from the file and number holds the number
     read from the file then saves it into the
@@ -107,16 +109,8 @@ int Master_Folder(char *User_Name) {
 
     printf("Enter account number");
     printf("-> ");
-    scanf("%d", &Money);
-
-
-    clear_buffer();
-    while (fscanf(Transfer_Money, "%d", &Number) == 1) {
-      Last_Number = Number; // loop updating and takes the last read integer
-    }
-    fseek(Transfer_Money, 0, SEEK_END);
-    Money = Last_Number -
-            Money; // Add the last money int he account to the deposited money
+    scanf("%d", &Last_Number);
+    
     fprintf(Transfer_Money, "%d\n",
             Money); // Writing to the file assosiated to Depasoted money
     printf("Account balance: %d\n", Money);
@@ -126,6 +120,6 @@ int Master_Folder(char *User_Name) {
   default:
     printf("Other features are not available.\b");
   }
-  
-  return 0;
+  printf("Money : %d\n", Money);
+  return Money ;
 }
