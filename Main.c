@@ -100,7 +100,6 @@ int main(){
       Existence_Indicator = 0;
       Master_Folder(User_Name);
       fclose(User_Check);
-      return 0;
     }
     else{
       Existence_Indicator = 1;
