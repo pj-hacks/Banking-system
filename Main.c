@@ -10,8 +10,8 @@
 #include <time.h>
 
 #define PATH_MAX 30
-#define MAX_NAME 200
-#define MAX_PASSCODE_LENGTH 30
+#define MAX_NAME 30
+#define MAX_PASSCODE_LENGTH 15
 int main() {
   
   int Existence_Indicator;
@@ -26,14 +26,15 @@ int main() {
   fgets(User_Name, sizeof(User_Name), stdin);
   clear_buffer(); // This clears the remianing input that overflows.
   remove_newline(User_Name); // This removes the newline left in the stream.
-  if (strlen(User_Name) > 190) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) > 25) { // makes sure the user_name does not exceed 190 characters
     while (1) {
       printf("\nName must not exceed 190\n");
       printf("Reenter your name\n");
       printf("-> ");
       fgets(User_Name, sizeof(User_Name), stdin);
       clear_buffer();
-      if (strlen(User_Name) < 190) {
+      remove_newline(User_Name);
+      if (strlen(User_Name) < 25) {
         break;
       }
     }
@@ -44,14 +45,15 @@ int main() {
   fgets(User_Passcode, sizeof(User_Passcode), stdin);
   clear_buffer();
   remove_newline(User_Passcode);
-  if (strlen(User_Passcode) > 20) {
+  if (strlen(User_Passcode) > 8) {
     while (1) {
       printf("\nPasscode must not exceed 20\n");
       printf("Renter your passcode");
       printf("-> ");
       fgets(User_Passcode, sizeof(User_Passcode), stdin);
       clear_buffer();
-      if (strlen(User_Passcode) < 20) {
+      remove_newline(User_Passcode);
+      if (strlen(User_Passcode) < 8) {
         break;  // runs only when the passcode is less than 20 character
       }
     }
@@ -86,11 +88,18 @@ int main() {
       printf("Initializing hand shake>>\n");
       sleep(2);
       printf("Welcome back %s\n", User_Name);
+      Existence_Indicator = 0;
       Master_Folder(User_Name);
       fclose(User_Check);
       return 0;
     }
     else{
+      Existence_Indicator = 1;
+      }
+  }
+    printf("\n\n%s\n\n", User_Name);
+    
+    if(Existence_Indicator == 1){
       // Creation of files
       FILE *User_Creation;
       User_Creation = fopen("User_Existence.txt", "a+");
@@ -99,24 +108,23 @@ int main() {
 	fclose(User_Check);
 	return 1;
       }
-
       // Create directory for the user
       char Directory_Path[PATH_MAX];
       snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
-      printf("Thanks for coming to pathner with us we have one of the best services\n");
-      if(mkdir(Directory_Path, 0755) == 0){}
+       printf("Thanks for coming to pathner with us we have one of the best services\n");
+       if(mkdir(Directory_Path, 0755) == 0){}
       else{
 	perror("mkdir error");
 	fclose(User_Creation);
 	fclose(User_Check);
 	return 1;
       }
-      if(fprintf(User_Creation, "%s\n", User_Name) == 1){
-	Master_Folder(User_Name);
-      }
-      fclose(User_Creation);
+       // write user name to user_existence.txt
+      if(fprintf(User_Creation, "%s\n", User_Name)){
+      Master_Folder(User_Name);
+       }
       fclose(User_Check);
     }
-  }
+  
 
 }
