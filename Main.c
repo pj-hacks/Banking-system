@@ -136,7 +136,8 @@ int main(){
       fclose(User_Check);
       fclose(User_Creation);
 
-      // Reusing the User_Creation pointer so that i can open and write to the user fiel
+      // Reusing the User_Creation pointer so that i can open
+      //and write user account number to the user personal file
       char File_Path[PATH_MAX];
       snprintf(File_Path, sizeof(File_Path), "./Master_Folder/User/%s/Account_setting.txt",User_Name);
       User_Creation = fopen(File_Path, "w+");

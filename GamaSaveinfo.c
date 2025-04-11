@@ -45,9 +45,9 @@ int Master_Folder(char *User_Name) {
       fprintf(stderr, "Error opening file: %s\n", strerror(errno));
       return 1;
     }
+    
     printf("How much do you want to deposite\n");
     printf("-> ");
-
     scanf("%d", &Money);
     clear_buffer();
 
@@ -74,11 +74,12 @@ int Master_Folder(char *User_Name) {
     if (Withdraw_Money == NULL) {
       fprintf(stderr, "Error opening file: %s\n", strerror(errno));
     }
+    
     printf("How much do you want to withdraw\n");
     printf("-> ");
     scanf("%d", &Money);
-
     clear_buffer();
+    
     while (fscanf(Withdraw_Money, "%d", &Number) == 1) {
       Last_Number = Number; // loop updating and takes the last read integer
       printf("money in the account is: %d\n", Last_Number);
@@ -108,11 +109,12 @@ int Master_Folder(char *User_Name) {
     printf("-> ");
     scanf("%d", &Money);
 
+
     clear_buffer();
     while (fscanf(Transfer_Money, "%d", &Number) == 1) {
       Last_Number = Number; // loop updating and takes the last read integer
     }
-    fseek(Withdraw_Money, 0, SEEK_END);
+    fseek(Transfer_Money, 0, SEEK_END);
     Money = Last_Number -
             Money; // Add the last money int he account to the deposited money
     fprintf(Transfer_Money, "%d\n",
@@ -124,5 +126,6 @@ int Master_Folder(char *User_Name) {
   default:
     printf("Other features are not available.\b");
   }
+  
   return 0;
 }
