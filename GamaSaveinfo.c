@@ -9,10 +9,12 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+// i declared this variables as global so that i wont have to repeat it's definition again.
 int Money;
+int Last_Number, Number, Action_Sellection;
 
 int Master_Folder(char *User_Name) {
-  int Last_Number, Number, Action_Sellection;
+  
   /*Last number holds the last amount read
     from the file and number holds the number
     read from the file then saves it into the
@@ -120,6 +122,5 @@ int Master_Folder(char *User_Name) {
   default:
     printf("Other features are not available.\b");
   }
-  printf("Money : %d\n", Money);
-  return Money ;
+  return 0;
 }
