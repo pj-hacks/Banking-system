@@ -175,9 +175,13 @@ int Master_Folder(char *User_Name) {
 
   default:
     printf("Other features are not available.\b");
-    fclose(
-  }
+  }// switch
       if(Decision_Controller > 6 ){
 	printf("\nThanks for working with us we are expecting to have you back later thanks\n");
+	Decision_Controller = 0;
+	break;
+      }
+  }// end of the control while statement
+  
   return 0;
 }
