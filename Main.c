@@ -107,16 +107,18 @@ int main(){
       Existence_Indicator = 0;
       Master_Folder(User_Name);
       fclose(User_Check);
+      break;
     }
     else{
       Existence_Indicator = 1;
+      break;
       }
   }
 
     if(Existence_Indicator == 1){
       // Creation of files
       FILE *User_Creation;
-      User_Creation = fopen("User_Existence.txt", "w");
+      User_Creation = fopen("User_Existence.txt", "a");
       if(User_Creation == NULL){
 	fprintf(stderr, "Error opening file: %s\n", strerror(errno));
 	fclose(User_Check);
@@ -170,7 +172,8 @@ int main(){
       fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
       return 1;
     }
-    char *Process_Initializer= Process[Action_Sellection];
+    char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
+    strcpy(Process_Initializer, Process[Action_Sellection]);
     if(fprintf(Record_Keeping, "\n%s %s %d from %d", User_Name,Process_Initializer, Money, Account_Number)){
       fclose(Record_Keeping);
     }
