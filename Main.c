@@ -12,6 +12,14 @@
 #define PATH_MAX 200
 #define MAX_NAME 30
 #define MAX_PASSCODE_LENGTH 15
+
+int Master_Folder(char *User_Name);
+
+// From the GamaSaveInfo.c file
+extern int Last_Number;
+extern int Number;
+extern int Action_Sellection;
+extern int Money;
 int main(){
 
   // srand will constantly generate constant number
@@ -27,6 +35,7 @@ int main(){
   char User_Name[MAX_NAME];
   char User_Name_Checker[MAX_NAME];
   char User_Passcode[MAX_PASSCODE_LENGTH];
+  char *Process[] = {"deposited", "withdrawed", "transfered", "chaged password"};
 
   printf(".........Welcome to Gamasave, a bank for you and not against you........\n");
 
@@ -150,7 +159,7 @@ int main(){
       }
     }
 
-    // Keeps record of all the activities done in the system
+     // Keeps record of all the activities done in the system
     FILE *Record_Keeping;
     Record_Keeping = fopen("General_Record.txt", "w+");
     if(Record_Keeping == NULL){
@@ -158,13 +167,15 @@ int main(){
       return 1;
     }
     fclose(Record_Keeping);
-    Record_Keeping = fopen("General_Record.txt", "a+");
+    Record_Keeping = fopen("General_Record.txt", "a");
     if(Record_Keeping == NULL){
       fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
       return 1;
     }
-    if(fprintf(Record_Keeping, "%s %d", User_Name, Account_Number)){
+    char *Process_Initializer= Process[Action_Sellection];
+    if(fprintf(Record_Keeping, "%s %s %d from %d", User_Name,Process_Initializer, Money, Account_Number)){
       fclose(Record_Keeping);
     }
-
+    
+    printf("%d,%d,%d\n", Last_Number, Money, Action_Sellection); 
 }
