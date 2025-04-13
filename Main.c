@@ -93,7 +93,7 @@ int main(){
     return 1;
   }
 
-  while (fgets(User_Name_Checker, sizeof(User_Name_Checker), User_Check) !=
+  while (fgets(User_Name_Checker, MAX_NAME, User_Check) !=
          NULL) {
     remove_newline(User_Name_Checker);
 
@@ -109,10 +109,6 @@ int main(){
       fclose(User_Check);
       break;
     }
-    else{
-      Existence_Indicator = 1;
-      break;
-      }
   }
 
     if(Existence_Indicator == 1){
@@ -161,22 +157,42 @@ int main(){
 
      // Keeps record of all the activities done in the system
     FILE *Record_Keeping;
-    Record_Keeping = fopen("General_Record.txt", "a+");
-    if(Record_Keeping == NULL){
-      fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
-      return 1;
-    }
-    fclose(Record_Keeping);
     Record_Keeping = fopen("General_Record.txt", "a");
     if(Record_Keeping == NULL){
       fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
       return 1;
     }
-    char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
-    strcpy(Process_Initializer, Process[Action_Sellection]);
-    if(fprintf(Record_Keeping, "\n%s %s %d from %d", User_Name,Process_Initializer, Money, Account_Number)){
-      fclose(Record_Keeping);
+
+
+
+
+
+    
+    if(Action_Sellection >= 0 && Action_Sellection <= 3 && Existence_Indicator == 1 && Action_Sellection != 2){
+      char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
+      strcpy(Process_Initializer, Process[Action_Sellection]);
+      if(fprintf(Record_Keeping, "\n%s %s %d from %d", User_Name,Process_Initializer, Money, Account_Number)){
+	fclose(Record_Keeping);
+      }
     }
+    
+    else if(Action_Sellection == 2){
+      char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
+      strcpy(Process_Initializer, Process[Action_Sellection]);
+      if(fprintf(Record_Keeping, "\n%s %s %d to %d", User_Name,Process_Initializer, Money, Last_Number)){
+	fclose(Record_Keeping);
+      }
+    }
+    
+    else if(Action_Sellection >= 5){
+      printf("\nOperation not availabel\n");
+      /*char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
+      strcpy(Process_Initializer, Process[Action_Sellection]);
+      if(fprintf(Record_Keeping, "\n%s %s %d ", User_Name,Process_Initializer, Money)){
+	fclose(Record_Keeping);
+	}*/
+    }
+    
     
     printf("%d,%d,%d\n", Last_Number, Money, Action_Sellection); 
 }
