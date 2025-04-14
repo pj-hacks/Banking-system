@@ -14,6 +14,8 @@
 int Money;
 int Last_Number;
 int Number;
+long Account_Number;
+int Account_Balance ;
 int Action_Sellection = 1;
 
 int Master_Folder(char *User_Name) {
@@ -69,6 +71,7 @@ int Master_Folder(char *User_Name) {
       Number = 0;
       Money = 0;
       Last_Number = 0;
+      Account_Balance = 0;
 
       printf("\nHow much do you want to deposite\n");
       printf("-> ");
@@ -93,11 +96,11 @@ int Master_Folder(char *User_Name) {
       }
 
       fseek(Deposite_Money, 0, SEEK_END);
-      Money = Last_Number +
+      Account_Balance  = Last_Number +
               Money; // Add the last money int he account to the deposited money
       fprintf(Deposite_Money, "%d\n",
-              Money); // Writing to the file assosiated to Depasoted money
-      printf("Account balance: %d\n", Money);
+              Account_Balance); // Writing to the file assosiated to Depasoted money
+      printf("Account balance: %d\n", Account_Balance);
       fclose(Deposite_Money);
       break;
 
@@ -114,6 +117,7 @@ int Master_Folder(char *User_Name) {
       Number = 0;
       Money = 0;
       Last_Number = 0;
+      Account_Balance = 0;
 
       printf("How much do you want to withdraw\n");
       printf("-> ");
@@ -144,11 +148,11 @@ int Master_Folder(char *User_Name) {
       }
 
       fseek(Withdraw_Money, 0, SEEK_END);
-      Money = Last_Number - Money; // subtracted the amount in the account with
+      Account_Balance  = Last_Number - Money; // subtracted the amount in the account with
                                    // the one that have been withdraeened
       fprintf(Withdraw_Money, "%d\n",
-              Money); // Writing to the file assosiated to Depasoted money
-      printf("\nAccount balance: %d\n", Money);
+              Account_Balance); // Writing to the file assosiated to Depasoted money
+      printf("\nAccount balance: %d\n", Account_Balance);
       fclose(Withdraw_Money);
       break;
 
@@ -166,6 +170,7 @@ int Master_Folder(char *User_Name) {
       Number = 0;
       Money = 0;
       Last_Number = 0;
+      Account_Balance = 0;
 
       printf("How much do you want to transfer\n");
       printf("-> ");
@@ -173,19 +178,19 @@ int Master_Folder(char *User_Name) {
 
       printf("Enter account number");
       printf("-> ");
-      scanf(" %d", &Last_Number);
+      scanf(" %lu", &Account_Number);
 
       while (fscanf(Transfer_Money, "%d", &Number) == 1) {
         Last_Number = Number; // loop updating and takes the last read integer
       }
 
       fseek(Transfer_Money, 0, SEEK_END);
-      Money = Last_Number - Money; // Subtract the Amount remaining in the
+      Account_Balance = Last_Number - Money; // Subtract the Amount remaining in the
                                    // account with the one transfered
 
       fprintf(Transfer_Money, "%d\n",
-              Money); // Writing to the file assosiated to Depasoted money
-      printf("Account balance: %d\n", Money);
+              Account_Balance); // Writing to the file assosiated to Depasoted money
+      printf("Account balance: %d\n", Account_Balance);
       fclose(Transfer_Money);
       break;
 

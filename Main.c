@@ -18,7 +18,7 @@ extern int Last_Number;
 extern int Number;
 extern int Action_Sellection;
 extern int Money;
-
+extern long  Account_Number;
 int main(){
 
   // srand will constantly generate constant number
@@ -28,7 +28,6 @@ int main(){
   */
   
   srand(time(NULL));
-  int Account_Number =rand();
   
   int Existence_Indicator = 1;
   char User_Name[MAX_NAME];
@@ -112,6 +111,7 @@ int main(){
   }
 
     if(Existence_Indicator == 1){
+      long Account_Number =rand();
       // Creation of files
       FILE *User_Creation;
       User_Creation = fopen("User_Existence.txt", "a");
@@ -134,7 +134,7 @@ int main(){
        // write user name to user_existence.txt
       if(fprintf(User_Creation, "%s\n", User_Name)){
 	printf("Your account number have been generated\n");
-	printf("Account Number = %d\n", Account_Number);
+	printf("Account Number = %lu\n", Account_Number);
 	Master_Folder(User_Name);
        }
       fclose(User_Check);
@@ -150,8 +150,9 @@ int main(){
 	return 1;
       }
       else{
-	fprintf(User_Creation, "%d\n", Account_Number);
+	fprintf(User_Creation, "%lu\n", Account_Number);
 	fclose(User_Creation);
+	Account_Number = 0;
       }
     }
 
@@ -163,15 +164,11 @@ int main(){
       return 1;
     }
 
-
-
-
-
-    
+    // Controls the way the input is saved to the file General_Record.txt
     if(Action_Sellection >= 0 && Action_Sellection <= 3 && Existence_Indicator == 1 && Action_Sellection != 2){
       char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
       strcpy(Process_Initializer, Process[Action_Sellection]);
-      if(fprintf(Record_Keeping, "\n%s %s %d from %d", User_Name,Process_Initializer, Money, Account_Number)){
+      if(fprintf(Record_Keeping, "\n%s %s %d from %lu", User_Name,Process_Initializer, Money, Account_Number)){
 	fclose(Record_Keeping);
       }
     }
@@ -179,7 +176,7 @@ int main(){
     else if(Action_Sellection == 2){
       char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
       strcpy(Process_Initializer, Process[Action_Sellection]);
-      if(fprintf(Record_Keeping, "\n%s %s %d to %d", User_Name,Process_Initializer, Money, Last_Number)){
+      if(fprintf(Record_Keeping, "\n%s %s %d to %lu", User_Name,Process_Initializer, Money, Account_Number)){
 	fclose(Record_Keeping);
       }
     }
@@ -194,5 +191,5 @@ int main(){
     }
     
     
-    printf("%d,%d,%d\n", Last_Number, Money, Action_Sellection); 
+    printf("%d is the money that was in the account before the operation,%d,%d is the account balance after transaction \n", Last_Number, Money, Action_Sellection); 
 }

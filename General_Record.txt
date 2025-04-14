@@ -14,3 +14,9 @@ prince ELF 209 from 1955332477
 hi transfered 40 to 60
 fuji withdrawed 23 from 1906273597
 fuji transfered 52 to 56
+unique transfered 50 to 500
+unique transfered -34 to 366
+unique transfered 70 to 904561193
+unique transfered 70 to 2147318912
+unique transfered 400 to -506993935
+unique transfered 200 to 8082940657
