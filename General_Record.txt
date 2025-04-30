@@ -21,3 +21,4 @@ unique transfered 70 to 2147318912
 unique transfered 400 to -506993935
 unique transfered 200 to 8082940657
 jose withdrawed 234 from 0
+nothing withdrawed 40 from 0
