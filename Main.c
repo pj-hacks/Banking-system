@@ -1,12 +1,13 @@
+
+#include "utility.h"
 #include <errno.h>
 #include <stdio.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include <time.h>
-#include "utility.h"
+#include <unistd.h>
 
 int Master_Folder(char *User_Name);
 #define PATH_MAX 200
@@ -14,42 +15,44 @@ int Master_Folder(char *User_Name);
 #define MAX_PASSCODE_LENGTH 15
 
 // From the GamaSaveInfo.c file
- int Last_Number;
- int Number;
- int Action_Sellection;
- int Money;
- long Account_Number;
- int Account_Balance ;
-int main(){
+int Last_Number;
+int Number;
+int Action_Sellection;
+int Money;
+long Account_Number;
+int Account_Balance;
+int main() {
 
   // srand will constantly generate constant number
   /*This constant number will be feed to the if statement
     that handles the user creation process. and will be
     stored in the user file
   */
-  
+
   srand(time(NULL));
-  
+
   int Existence_Indicator = 1;
   char User_Name[MAX_NAME];
   char User_Name_Checker[MAX_NAME];
   char User_Passcode[MAX_PASSCODE_LENGTH];
-  const char *Process[] = {"deposited", "withdrawed", "transfered", "chaged password"};
+  const char *Process[] = {"deposited", "withdrawed", "transfered",
+                           "chaged password"};
 
-  printf(".........Welcome to Gamasave, a bank for you and not against you........\n");
+  printf(".........Welcome to Gamasave, a bank for you and not against "
+         "you........\n");
 
   printf("Enter your username\n");
   printf("-> ");
   fgets(User_Name, sizeof(User_Name), stdin);
-  clear_buffer(); // This clears the remianing input that overflows.
+  // This clears the remianing input that overflows.
   remove_newline(User_Name); // This removes the newline left in the stream.
-  if (strlen(User_Name) > 25) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) >
+      25) { // makes sure the user_name does not exceed 190 characters
     while (1) {
       printf("\nName must not exceed 25\n");
       printf("Retry\n");
       printf("-> ");
       fgets(User_Name, sizeof(User_Name), stdin);
-      clear_buffer();
       remove_newline(User_Name);
       if (strlen(User_Name) < 25) {
         break;
@@ -60,7 +63,6 @@ int main(){
   printf("\nWhat is your passcode\n");
   printf("-> ");
   fgets(User_Passcode, sizeof(User_Passcode), stdin);
-  clear_buffer();
   remove_newline(User_Passcode);
   if (strlen(User_Passcode) > 8) {
     while (1) {
@@ -68,14 +70,12 @@ int main(){
       printf("Retry");
       printf("-> ");
       fgets(User_Passcode, sizeof(User_Passcode), stdin);
-      clear_buffer();
       remove_newline(User_Passcode);
       if (strlen(User_Passcode) < 8) {
-        break;  // runs only when the passcode is less than 20 character
+        break; // runs only when the passcode is less than 20 character
       }
     }
   }
-
 
   /* This part check if the user exists, if the user does
      not exist a folder will be created for the person
@@ -83,7 +83,7 @@ int main(){
      you are doing bear it in mind that that folder is
      very essectial for this project.
   */
-  
+
   FILE *User_Check;
   User_Check = fopen("User_Existence.txt", "r");
   if (User_Check == NULL) {
@@ -93,8 +93,7 @@ int main(){
     return 1;
   }
 
-  while (fgets(User_Name_Checker, MAX_NAME, User_Check) !=
-         NULL) {
+  while (fgets(User_Name_Checker, MAX_NAME, User_Check) != NULL) {
     remove_newline(User_Name_Checker);
 
     if ((strcmp(User_Name_Checker, User_Name)) == 0) {
@@ -111,92 +110,96 @@ int main(){
     }
   }
 
-    if(Existence_Indicator == 1){
-      unsigned long New_User_Accout_Number =rand();
-      // Creation of files
-      FILE *User_Creation;
-      User_Creation = fopen("User_Existence.txt", "a");
-      if(User_Creation == NULL){
-	fprintf(stderr, "Error opening file: %s\n", strerror(errno));
-	fclose(User_Check);
-	return 1;
-      }
-      // Create directory for the user
-      char Directory_Path[PATH_MAX];
-      snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",User_Name);
-      printf("Thanks for coming to pathner with us we have one of the best services\n");
-      if(mkdir(Directory_Path, 0755) == 0){}
-      else{
-	perror("mkdir error");
-	fclose(User_Creation);
-	fclose(User_Check);
-	return 1;
-      }
-       // write user name to user_existence.txt
-      if(fprintf(User_Creation, "%s\n", User_Name)){
-	printf("Your account number have been generated\n");
-	printf("New_User_Account Number = %lu\n", New_User_Accout_Number);
-	Master_Folder(User_Name);
-       }
+  if (Existence_Indicator == 1) {
+    unsigned long New_User_Accout_Number = rand();
+    // Creation of files
+    FILE *User_Creation;
+    User_Creation = fopen("User_Existence.txt", "a");
+    if (User_Creation == NULL) {
+      fprintf(stderr, "Error opening file: %s\n", strerror(errno));
       fclose(User_Check);
-      fclose(User_Creation);
-
-      // Reusing the User_Creation pointer so that i can open
-      //and write user account number to the user personal file
-      char File_Path[PATH_MAX];
-      snprintf(File_Path, sizeof(File_Path), "./Master_Folder/User/%s/Account_setting.txt",User_Name);
-      User_Creation = fopen(File_Path, "w+");
-      if(User_Creation == NULL){
-	fprintf(stderr, "Error occured: %s\n", strerror(errno));
-	return 1;
-      }
-      else{
-	fprintf(User_Creation, "%lu\n", New_User_Accout_Number);
-	fclose(User_Creation);
-	Account_Number = 0;
-      }
-    }
-
-     // Keeps record of all the activities done in the system
-    FILE *Record_Keeping;
-    Record_Keeping = fopen("General_Record.txt", "a");
-    if(Record_Keeping == NULL){
-      fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
       return 1;
     }
+    // Create directory for the user
+    char Directory_Path[PATH_MAX];
+    snprintf(Directory_Path, sizeof(Directory_Path), "./Master_Folder/User/%s",
+             User_Name);
+    printf("Thanks for coming to pathner with us we have one of the best "
+           "services\n");
+    if (mkdir(Directory_Path, 0755) == 0) {
+    } else {
+      perror("mkdir error");
+      fclose(User_Creation);
+      fclose(User_Check);
+      return 1;
+    }
+    // write user name to user_existence.txt
+    if (fprintf(User_Creation, "%s\n", User_Name)) {
+      printf("Your account number have been generated\n");
+      printf("New_User_Account Number = %lu\n", New_User_Accout_Number);
+      Master_Folder(User_Name);
+    }
+    fclose(User_Check);
+    fclose(User_Creation);
 
-    // Controls the way the input is saved to the file General_Record.txt
-    if(Action_Sellection >= 0 && Action_Sellection <= 3 && Existence_Indicator == 1 && Action_Sellection != 2){
-      char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
-      strcpy(Process_Initializer, Process[Action_Sellection]);
-      if(fprintf(Record_Keeping, "\n%s %s %d from %ld", User_Name,Process_Initializer, Money, Account_Number)){
-	fclose(Record_Keeping);
-      }
+    // Reusing the User_Creation pointer so that i can open
+    // and write user account number to the user personal file
+    char File_Path[PATH_MAX];
+    snprintf(File_Path, sizeof(File_Path),
+             "./Master_Folder/User/%s/Account_setting.txt", User_Name);
+    User_Creation = fopen(File_Path, "w+");
+    if (User_Creation == NULL) {
+      fprintf(stderr, "Error occured: %s\n", strerror(errno));
+      return 1;
+    } else {
+      fprintf(User_Creation, "%lu\n", New_User_Accout_Number);
+      fclose(User_Creation);
+      Account_Number = 0;
     }
-    
-    else if(Action_Sellection == 2){
-      char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
-      strcpy(Process_Initializer, Process[Action_Sellection]);
-      if(fprintf(Record_Keeping, "\n%s %s %d to %ld", User_Name,Process_Initializer, Money, Account_Number)){
-	fclose(Record_Keeping);
-      }
-    }
-    
-    else if(Action_Sellection >= 5){
-      printf("\nOperation not availabel\n");
-      /*char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
-      strcpy(Process_Initializer, Process[Action_Sellection]);
-      if(fprintf(Record_Keeping, "\n%s %s %d ", User_Name,Process_Initializer, Money)){
-	fclose(Record_Keeping);
-	}*/
-    }
+  }
 
-    return 0;
+  // Keeps record of all the activities done in the system
+  FILE *Record_Keeping;
+  Record_Keeping = fopen("General_Record.txt", "a");
+  if (Record_Keeping == NULL) {
+    fprintf(stderr, "Encountered error: %s\n\n", strerror(errno));
+    return 1;
+  }
+
+  // Controls the way the input is saved to the file General_Record.txt
+  if ((Action_Sellection >= 0 && Action_Sellection <= 3) &&
+      Action_Sellection != 2) {
+    char Process_Initializer[strlen(Process[Action_Sellection] + 1)];
+    strcpy(Process_Initializer, Process[Action_Sellection]);
+    if (fprintf(Record_Keeping, "\n%s %s %d to %ld", User_Name,
+                Process_Initializer, Money, Account_Number)) {
+      fclose(Record_Keeping);
+    }
+  }
+
+  else if (Action_Sellection == 2) {
+    char Process_Initializer[strlen(Process[Action_Sellection] + 1)];
+    strcpy(Process_Initializer, Process[Action_Sellection]);
+    if (fprintf(Record_Keeping, "\n%s %s %d to %ld", User_Name,
+                Process_Initializer, Money, Account_Number)) {
+      fclose(Record_Keeping);
+    }
+  }
+
+  else if (Action_Sellection >= 5) {
+    printf("\nOperation not availabel\n");
+    /*char Process_Initializer[strlen(Process[Action_Sellection] +1 )];
+    strcpy(Process_Initializer, Process[Action_Sellection]);
+    if(fprintf(Record_Keeping, "\n%s %s %d ", User_Name,Process_Initializer,
+    Money)){ fclose(Record_Keeping);
+      }*/
+  }
+
+  return 0;
 }
 
-
-
-
+/*********************************************/
+/*********************************************/
 
 int Master_Folder(char *User_Name) {
   char Continuation_Flag;
@@ -276,10 +279,12 @@ int Master_Folder(char *User_Name) {
       }
 
       fseek(Deposite_Money, 0, SEEK_END);
-      Account_Balance  = Last_Number +
-              Money; // Add the last money int he account to the deposited money
-      fprintf(Deposite_Money, "%d\n",
-              Account_Balance); // Writing to the file assosiated to Depasoted money
+      Account_Balance =
+          Last_Number +
+          Money; // Add the last money int he account to the deposited money
+      fprintf(
+          Deposite_Money, "%d\n",
+          Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("Account balance: %d\n", Account_Balance);
       fclose(Deposite_Money);
       break;
@@ -293,7 +298,7 @@ int Master_Folder(char *User_Name) {
       if (Withdraw_Money == NULL) {
         fprintf(stderr, "Error opening file: %s\n", strerror(errno));
       }
-      
+
       Number = 0;
       Money = 0;
       Last_Number = 0;
@@ -311,27 +316,35 @@ int Master_Folder(char *User_Name) {
       while (1) {
         if (Money > Last_Number) {
           printf("\nAccount balance is low, enter between account range\n");
+	  printf("Enter 7 to exit\n");
           printf("Account balance is %d\n", Last_Number);
           printf("Retry");
           printf("-> ");
           scanf(" %d", &Money);
           clear_buffer();
         } else if (Money < 1) {
-          printf("\nAmount should not be less than 1\n");
+          printf("\nAmount should not be less than %d\n", Last_Number);
+	  printf("Enter 7 to exit\n");
           printf("Retry");
           printf("-> ");
           scanf(" %d", &Money);
           clear_buffer();
-        } else {
+        }
+	else if ( Money == 7 ){
+	  break;
+	}
+	else {
           break;
         }
       }
 
       fseek(Withdraw_Money, 0, SEEK_END);
-      Account_Balance  = Last_Number - Money; // subtracted the amount in the account with
-                                   // the one that have been withdraeened
-      fprintf(Withdraw_Money, "%d\n",
-              Account_Balance); // Writing to the file assosiated to Depasoted money
+      Account_Balance =
+          Last_Number - Money; // subtracted the amount in the account with
+                               // the one that have been withdraeened
+      fprintf(
+          Withdraw_Money, "%d\n",
+          Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("\nAccount balance: %d\n", Account_Balance);
       fclose(Withdraw_Money);
       break;
@@ -365,11 +378,13 @@ int Master_Folder(char *User_Name) {
       }
 
       fseek(Transfer_Money, 0, SEEK_END);
-      Account_Balance = Last_Number - Money; // Subtract the Amount remaining in the
-                                   // account with the one transfered
+      Account_Balance =
+          Last_Number - Money; // Subtract the Amount remaining in the
+                               // account with the one transfered
 
-      fprintf(Transfer_Money, "%d\n",
-              Account_Balance); // Writing to the file assosiated to Depasoted money
+      fprintf(
+          Transfer_Money, "%d\n",
+          Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("Account balance: %d\n", Account_Balance);
       fclose(Transfer_Money);
       break;
@@ -415,4 +430,3 @@ int Master_Folder(char *User_Name) {
 
   return 0;
 }
-

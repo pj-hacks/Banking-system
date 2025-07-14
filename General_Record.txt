@@ -25,3 +25,17 @@ nothing withdrawed 40 from 0
 happy deposited 500 from 0
 nothing transfered 200 to 8082940657
 jih deposited 300 from 0
+tiny deposited 1000 from 0
+money deposited 2000 from 0
+set deposited 288 from 0
+set transfered 200 to 8484848
+set  transfered 288 to 0
+ani deposited 2999 from 0
+set deposited 200 from 0
+set deposited 200 to 0
+set withdrawed 200 to 0
+set withdrawed 100 to 0
+joseph deposited 100 to 0
+fi deposited 80 to 0
+fi withdrawed 20 to 0
+fi withdrawed 7 to 0
