@@ -1,8 +1,9 @@
 CFLAGS = -Wall -Werror
 SCR = Main.c utility.c 
 CC = gcc
-
+FILE = General_Record.txt   
 all: final
+	:>$(FILE)
 
 final: Main.o utility.o
 	$(CC) $(CFLAGS) $(SCR) -o final

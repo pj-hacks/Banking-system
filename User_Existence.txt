@@ -15,3 +15,5 @@ set
 set 
 ani
 fi
+name
+NAME
