@@ -10,6 +10,7 @@
 #include <unistd.h>
 
 int Master_Folder(char *User_Name);
+int Account_Alert(char *User_Name, int Account_Balance);
 #define PATH_MAX 200
 #define MAX_NAME 30
 #define MAX_PASSCODE_LENGTH 15
@@ -21,7 +22,8 @@ int Action_Sellection;
 int Money;
 long Account_Number;
 int Account_Balance;
-int main() {
+int main()
+{
 
   // srand will constantly generate constant number
   /*This constant number will be feed to the if statement
@@ -36,18 +38,17 @@ int main() {
   char User_Name_Checker[MAX_NAME];
   char User_Passcode[MAX_PASSCODE_LENGTH];
   const char *Process[] = {"deposited", "withdrawed", "transfered",
-                           "chaged password"};
+                           "chaged password"
+                          };
 
   printf(".........Welcome to Gamasave, a bank for you and not against "
          "you........\n");
 
-  printf("Enter your username\n");
+  printf("Enter your username\nShould not exceed 25 characters\n");
   printf("-> ");
   fgets(User_Name, sizeof(User_Name), stdin);
-  // This clears the remianing input that overflows.
   remove_newline(User_Name); // This removes the newline left in the stream.
-  if (strlen(User_Name) >
-      25) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) > 25) { // makes sure the user_name does not exceed 190 characters
     while (1) {
       printf("\nName must not exceed 25\n");
       printf("Retry\n");
@@ -111,7 +112,7 @@ int main() {
   }
 
   if (Existence_Indicator == 1) {
-    unsigned long New_User_Accout_Number = rand();
+    unsigned long New_User_Accout_Number = phone_number;
     // Creation of files
     FILE *User_Creation;
     User_Creation = fopen("User_Existence.txt", "a");
@@ -201,7 +202,8 @@ int main() {
 /*********************************************/
 /*********************************************/
 
-int Master_Folder(char *User_Name) {
+int Master_Folder(char *User_Name)
+{
   char Continuation_Flag;
   int While_Loop_controller = 1;
   /*Last number holds the last amount read
@@ -280,11 +282,11 @@ int Master_Folder(char *User_Name) {
 
       fseek(Deposite_Money, 0, SEEK_END);
       Account_Balance =
-          Last_Number +
-          Money; // Add the last money int he account to the deposited money
+        Last_Number +
+        Money; // Add the last money int he account to the deposited money
       fprintf(
-          Deposite_Money, "%d\n",
-          Account_Balance); // Writing to the file assosiated to Depasoted money
+        Deposite_Money, "%d\n",
+        Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("Account balance: %d\n", Account_Balance);
       fclose(Deposite_Money);
       break;
@@ -316,7 +318,7 @@ int Master_Folder(char *User_Name) {
       while (1) {
         if (Money > Last_Number) {
           printf("\nAccount balance is low, enter between account range\n");
-	  printf("Enter 7 to exit\n");
+          printf("Enter 7 to exit\n");
           printf("Account balance is %d\n", Last_Number);
           printf("Retry");
           printf("-> ");
@@ -324,27 +326,25 @@ int Master_Folder(char *User_Name) {
           clear_buffer();
         } else if (Money < 1) {
           printf("\nAmount should not be less than %d\n", Last_Number);
-	  printf("Enter 7 to exit\n");
+          printf("Enter 7 to exit\n");
           printf("Retry");
           printf("-> ");
           scanf(" %d", &Money);
           clear_buffer();
-        }
-	else if ( Money == 7 ){
-	  break;
-	}
-	else {
+        } else if (Money == 7) {
+          break;
+        } else {
           break;
         }
       }
 
       fseek(Withdraw_Money, 0, SEEK_END);
       Account_Balance =
-          Last_Number - Money; // subtracted the amount in the account with
-                               // the one that have been withdraeened
+        Last_Number - Money; // subtracted the amount in the account with
+      // the one that have been withdraeened
       fprintf(
-          Withdraw_Money, "%d\n",
-          Account_Balance); // Writing to the file assosiated to Depasoted money
+        Withdraw_Money, "%d\n",
+        Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("\nAccount balance: %d\n", Account_Balance);
       fclose(Withdraw_Money);
       break;
@@ -379,12 +379,12 @@ int Master_Folder(char *User_Name) {
 
       fseek(Transfer_Money, 0, SEEK_END);
       Account_Balance =
-          Last_Number - Money; // Subtract the Amount remaining in the
-                               // account with the one transfered
+        Last_Number - Money; // Subtract the Amount remaining in the
+      // account with the one transfered
 
       fprintf(
-          Transfer_Money, "%d\n",
-          Account_Balance); // Writing to the file assosiated to Depasoted money
+        Transfer_Money, "%d\n",
+        Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("Account balance: %d\n", Account_Balance);
       fclose(Transfer_Money);
       break;
@@ -428,5 +428,23 @@ int Master_Folder(char *User_Name) {
     }
   } // end of the control while statement
 
+  return 0;
+}
+
+int Account_Alert(char *User_Name, int Account_Balance)
+{
+  printf("\n");
+  printf("===============================================\n");
+  printf("***********************************************\n");
+  printf("===============================================\n");
+  printf("%s\n", Transaction_Type);
+  printf("%lu\n", Account_Number);
+  printf("%d\n", Transaction_Value);
+  printf("%s\n", Description);
+  printf("%s\n", Date);
+  printf("%d\n", Account_Balance);
+  printf("===============================================\n");
+  printf("***********************************************\n");
+  printf("===============================================\n");
   return 0;
 }
