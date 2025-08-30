@@ -10,10 +10,13 @@
 #include <unistd.h>
 
 int Master_Folder(char *User_Name);
-int Account_Alert(char *User_Name, int Account_Balance);
+int Account_Alert(int Transaction_Value, int Transaction_Type,
+                  char *Description);
 #define PATH_MAX 200
 #define MAX_NAME 30
 #define MAX_PASSCODE_LENGTH 15
+
+time_t current_time; // know that time_t is a data type
 
 // From the GamaSaveInfo.c file
 int Last_Number;
@@ -34,6 +37,7 @@ int main()
   srand(time(NULL));
 
   int Existence_Indicator = 1;
+  int phone_number = 0;
   char User_Name[MAX_NAME];
   char User_Name_Checker[MAX_NAME];
   char User_Passcode[MAX_PASSCODE_LENGTH];
@@ -48,7 +52,8 @@ int main()
   printf("-> ");
   fgets(User_Name, sizeof(User_Name), stdin);
   remove_newline(User_Name); // This removes the newline left in the stream.
-  if (strlen(User_Name) > 25) { // makes sure the user_name does not exceed 190 characters
+  if (strlen(User_Name) >
+      25) { // makes sure the user_name does not exceed 190 characters
     while (1) {
       printf("\nName must not exceed 25\n");
       printf("Retry\n");
@@ -111,7 +116,25 @@ int main()
     }
   }
 
+  // User do not exit so the user files and folders will be created.
   if (Existence_Indicator == 1) {
+
+    // For storing phone number;
+    printf("Enter Phone Number :-> ");
+    scanf("%d", &phone_number);
+    clear_buffer();
+    if (phone_number > 11) {
+      while (1) {
+        printf("Enter a valid phone number, which should not be greater than "
+               "11\n");
+        printf("-> ");
+        scanf("%d", &phone_number);
+        clear_buffer();
+        if (phone_number < 11) {
+          break;
+        }
+      }
+    }
     unsigned long New_User_Accout_Number = phone_number;
     // Creation of files
     FILE *User_Creation;
@@ -242,13 +265,13 @@ int Master_Folder(char *User_Name)
       }
     }
     switch (Action_Sellection) {
-    case 0: // Deposite
+    case 0: // Transfer
       // construct the full path
       snprintf(File_Path, sizeof(File_Path),
                "./Master_Folder/User/%s/Account.txt", User_Name);
-      FILE *Deposite_Money;
-      Deposite_Money = fopen(File_Path, "a+");
-      if (Deposite_Money == NULL) {
+      FILE *Transfered_Money;
+      Transfered_Money = fopen(File_Path, "a+");
+      if (Transfered_Money == NULL) {
         fprintf(stderr, "Error opening file: %s\n", strerror(errno));
         return 1;
       }
@@ -258,7 +281,7 @@ int Master_Folder(char *User_Name)
       Last_Number = 0;
       Account_Balance = 0;
 
-      printf("\nHow much do you want to deposite\n");
+      printf("\nAmount \n");
       printf("-> ");
       scanf(" %d", &Money);
       clear_buffer();
@@ -275,82 +298,23 @@ int Master_Folder(char *User_Name)
         }
       }
 
-      while (fscanf(Deposite_Money, "%d", &Number) == 1) {
+      while (fscanf(Transfered_Money, "%d", &Number) == 1) {
         Last_Number = Number; // loop updating and takes the last read integer
         // printf("money in the account is: %d\n", Last_Number);
       }
 
-      fseek(Deposite_Money, 0, SEEK_END);
+      fseek(Transfered_Money, 0, SEEK_END);
       Account_Balance =
-        Last_Number +
+        Number -
         Money; // Add the last money int he account to the deposited money
       fprintf(
-        Deposite_Money, "%d\n",
+        Transfered_Money, "%d\n",
         Account_Balance); // Writing to the file assosiated to Depasoted money
       printf("Account balance: %d\n", Account_Balance);
-      fclose(Deposite_Money);
+      fclose(Transfered_Money);
       break;
 
-    case 1: // withdraw
-      // construct the full path
-      snprintf(File_Path, sizeof(File_Path),
-               "./Master_Folder/User/%s/Account.txt", User_Name);
-      FILE *Withdraw_Money;
-      Withdraw_Money = fopen(File_Path, "a+");
-      if (Withdraw_Money == NULL) {
-        fprintf(stderr, "Error opening file: %s\n", strerror(errno));
-      }
-
-      Number = 0;
-      Money = 0;
-      Last_Number = 0;
-      Account_Balance = 0;
-
-      printf("How much do you want to withdraw\n");
-      printf("-> ");
-      scanf(" %d", &Money);
-      clear_buffer();
-
-      while (fscanf(Withdraw_Money, "%d", &Number) == 1) {
-        Last_Number = Number; // loop updating and takes the last read integer
-      }
-
-      while (1) {
-        if (Money > Last_Number) {
-          printf("\nAccount balance is low, enter between account range\n");
-          printf("Enter 7 to exit\n");
-          printf("Account balance is %d\n", Last_Number);
-          printf("Retry");
-          printf("-> ");
-          scanf(" %d", &Money);
-          clear_buffer();
-        } else if (Money < 1) {
-          printf("\nAmount should not be less than %d\n", Last_Number);
-          printf("Enter 7 to exit\n");
-          printf("Retry");
-          printf("-> ");
-          scanf(" %d", &Money);
-          clear_buffer();
-        } else if (Money == 7) {
-          break;
-        } else {
-          break;
-        }
-      }
-
-      fseek(Withdraw_Money, 0, SEEK_END);
-      Account_Balance =
-        Last_Number - Money; // subtracted the amount in the account with
-      // the one that have been withdraeened
-      fprintf(
-        Withdraw_Money, "%d\n",
-        Account_Balance); // Writing to the file assosiated to Depasoted money
-      printf("\nAccount balance: %d\n", Account_Balance);
-      fclose(Withdraw_Money);
-      break;
-
-    case 2:
-
+    case 1:
       // construct the full path
       snprintf(File_Path, sizeof(File_Path),
                "./Master_Folder/User/%s/Account.txt", User_Name);
@@ -391,48 +355,15 @@ int Master_Folder(char *User_Name)
 
     } // switch
 
-    if (Action_Sellection <= 5) {
-      printf("Do you want to continue (y or n): ");
-      scanf(" %c", &Continuation_Flag);
-      clear_buffer();
-
-      // This loop make sure the user enter onlu (y or n)
-      while (1) {
-        if ((Continuation_Flag != 'n' && Continuation_Flag != 'N') &&
-            (Continuation_Flag != 'y' && Continuation_Flag != 'Y')) {
-          printf("\nPlease enter a valid character (y or n)\n");
-          printf("Do you want to continue (y or n): ");
-          scanf(" %c", &Continuation_Flag);
-          clear_buffer();
-          if (Continuation_Flag != 'n' || Continuation_Flag != 'N') {
-            break;
-          } else if (Continuation_Flag != 'y' || Continuation_Flag != 'Y') {
-            break;
-          } else {
-            continue;
-          }
-        }
-        break;
-      }
-
-      // This part of the code decide if the code will continue or end
-      if (Continuation_Flag == 'y' || Continuation_Flag == 'Y') {
-        While_Loop_controller = 1;
-        continue;
-      } else if (Continuation_Flag == 'n' || Continuation_Flag == 'N') {
-        While_Loop_controller = 0;
-        printf("\nThanks for working with us we are expecting to have you back "
-               "later thanks\n");
-        break;
-      }
-    }
   } // end of the control while statement
 
   return 0;
 }
 
-int Account_Alert(char *User_Name, int Account_Balance)
+int Account_Alert(int Transaction_Value, int Transaction_Type,
+                  char *Description)
 {
+  current_time = time(NULL);
   printf("\n");
   printf("===============================================\n");
   printf("***********************************************\n");
@@ -441,7 +372,7 @@ int Account_Alert(char *User_Name, int Account_Balance)
   printf("%lu\n", Account_Number);
   printf("%d\n", Transaction_Value);
   printf("%s\n", Description);
-  printf("%s\n", Date);
+  printf("%s\n", ctime(&current_time));
   printf("%d\n", Account_Balance);
   printf("===============================================\n");
   printf("***********************************************\n");

@@ -4,6 +4,7 @@ CC = gcc
 FILE = General_Record.txt   
 all: final
 	:>$(FILE)
+	find ~/Master_Folder/User -mindepth 1 -maxdepth 1 -type d -exec rm -rf {} +
 
 final: Main.o utility.o
 	$(CC) $(CFLAGS) $(SCR) -o final
