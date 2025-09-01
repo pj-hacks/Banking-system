@@ -6,7 +6,18 @@
 
 void remove_newline(char *str)
 {
+
   str[strcspn(str, "\n")] = 0;
+}
+
+
+void get_string(char input[], char buffer[])
+{
+  printf("%s", input);
+  fflush(stdout);
+  //char * prompt = malloc(strlen(buffer));
+  fgets(buffer, 1000, stdin);
+  buffer[strcspn(buffer, "\n")] = 0;
 }
 
 
