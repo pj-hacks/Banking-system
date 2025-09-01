@@ -17,3 +17,11 @@ ani
 fi
 name
 NAME
+hu
+jd
+gi
+ht
+sw
+fr
+dr
+kd

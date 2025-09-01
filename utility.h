@@ -3,6 +3,6 @@
 
 void remove_newline(char *str);
 void clear_buffer();
-
+void clear_screen();
 #endif
 
